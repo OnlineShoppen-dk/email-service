@@ -1,0 +1,35 @@
+﻿version: '3'
+
+services:
+  rabbitqueue:
+    image: rabbitmq:3.13-management
+    container_name: rabbitqueue
+    command: rabbitmq-server
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    networks:
+      - queue-network
+
+  email-service:
+    build:
+      context: ./email-service/EmailService
+      dockerfile: Dockerfile
+    image: email-service
+    container_name: email-service-container
+    networks:
+      - queue-network
+    depends_on:
+      rabbitqueue:
+         condition: service_healthy
+         restart: true
+    #restart: on-failure
+         
+
+networks:
+  queue-network:
