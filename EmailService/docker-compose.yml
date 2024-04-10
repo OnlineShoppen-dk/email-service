@@ -28,7 +28,6 @@ services:
       rabbitqueue:
          condition: service_healthy
          restart: true
-    #restart: on-failure
          
 
 networks:
