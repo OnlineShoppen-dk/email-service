@@ -3,17 +3,13 @@ using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-string QueueContainerHostname = "rabbitqueue";
+string QueueContainerHostname = "rabbitmq";
 var factory = new ConnectionFactory { HostName = QueueContainerHostname };
 
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
-channel.QueueDeclare(queue: "Emailer",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+channel.QueueDeclarePassive(queue: "user_registration");
 
 Console.WriteLine(" [*] Waiting for messages.");
 
@@ -28,7 +24,7 @@ consumer.Received += async (model, ea) =>
     Console.WriteLine($" [x] Received message.\n     To: {emailMessage.Email}\n     Subject: {emailMessage.Subject}\n     Body: {emailMessage.Body}");
 };
 
-channel.BasicConsume(queue: "Emailer",
+channel.BasicConsume(queue: "user_registration",
                      autoAck: true,
                      consumer: consumer);
 
