@@ -3,8 +3,8 @@ using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-string QueueContainerHostname = "rabbitmq";
-var factory = new ConnectionFactory { HostName = QueueContainerHostname };
+string QueueContainerHostname = "rabbitqueue";
+var factory = new ConnectionFactory { HostName = QueueContainerHostname, UserName = "user", Password = "userpass"};
 
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
